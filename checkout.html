@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Important: Add these meta tags for proper mobile input handling -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Checkout | Smokara</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script defer src="js/script.js"></script>
+    <style>
+        /* Additional CSS to prevent zoom on input focus */
+        @media screen and (max-width: 768px) {
+            input, select, textarea, button {
+                font-size: 16px !important; /* Prevents zoom on focus in iOS */
+            }
+            
+            /* Ensure form elements don't cause zoom */
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 16px !important;
+                -webkit-text-size-adjust: 100%;
+            }
+            
+            /* Prevent zoom on focus for all input types */
+            input[type="text"],
+            input[type="email"],
+            input[type="tel"],
+            input[type="number"],
+            input[type="password"],
+            input[type="search"],
+            textarea,
+            select {
+                font-size: 16px !important;
+            }
+            
+            /* Remove any transform that might cause zoom issues */
+            .form-group input:focus,
+            .form-group select:focus,
+            .form-group textarea:focus {
+                transform: none !important;
+                -webkit-transform: none !important;
+            }
+            
+            /* Ensure the input stays in place when focused */
+            .checkout-form form {
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Make sure the input is clearly visible when focused */
+            .form-group input:focus {
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+                outline: none;
+                background-color: #fff;
+            }
+            
+            /* Smooth scrolling for the entire page */
+            html {
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            /* Ensure the input stays in the viewport */
+            .form-group {
+                position: relative;
+            }
+        }
+        
+        /* For very small screens */
+        @media screen and (max-width: 480px) {
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 16px !important;
+                padding: 12px 15px; /* Slightly larger touch target */
+            }
+            
+            /* Increase touch target size */
+            .place-order-btn {
+                min-height: 48px;
+                padding: 12px 20px;
+            }
+        }
+        
+        /* For iOS specific fixes */
+        @supports (-webkit-touch-callout: none) {
+            input, select, textarea, button {
+                font-size: 16px !important;
+            }
+            
+            /* Prevent zoom on focus for iOS */
+            .form-group input:focus,
+            .form-group select:focus,
+            .form-group textarea:focus {
+                font-size: 16px !important;
+            }
+        }
+        /* ======================================================================
+   ORDER SUCCESS POPUP - PROFESSIONAL DESIGN
+   ====================================================================== */
+
+.order-popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.order-popup-container.fade-out {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+.order-popup {
+    background: white;
+    border-radius: 32px;
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease;
+}
+
+.order-popup-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    position: relative;
+    text-align: center;
+    border-radius: 32px 32px 0 0;
+}
+
+.order-popup-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 15px 0 0;
+    letter-spacing: -0.5px;
+}
+
+.popup-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 28px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1;
+}
+
+.popup-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+/* Success Animation */
+.success-animation {
+    margin: 0 auto;
+    width: 80px;
+    height: 80px;
+}
+
+.checkmark {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 2;
+    stroke: #fff;
+    stroke-miterlimit: 10;
+    margin: 0 auto;
+    box-shadow: inset 0px 0px 0px #7ac142;
+    animation: fill 0.4s ease-in-out 0.4s forwards, scale 0.3s ease-in-out 0.9s both;
+}
+
+.checkmark-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    stroke: #fff;
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.checkmark-check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+
+@keyframes stroke {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes scale {
+    0%, 100% {
+        transform: none;
+    }
+    50% {
+        transform: scale3d(1.1, 1.1, 1);
+    }
+}
+
+@keyframes fill {
+    100% {
+        box-shadow: inset 0px 0px 0px 30px #7ac142;
+    }
+}
+
+.order-popup-content {
+    padding: 30px;
+}
+
+.order-confirmation-message {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.order-confirmation-message p {
+    font-size: 16px;
+    color: #4a5568;
+    margin: 5px 0;
+}
+
+.order-confirmation-message strong {
+    color: #667eea;
+    font-weight: 600;
+}
+
+/* Invoice Card */
+.invoice-card {
+    background: #f8fafc;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+.invoice-header {
+    background: white;
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.brand-section {
+    text-align: left;
+}
+
+.brand-name {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1a202c;
+    letter-spacing: -0.5px;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.brand-tagline {
+    font-size: 12px;
+    color: #718096;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.invoice-badge .badge-paid {
+    background: #48bb78;
+    color: white;
+    padding: 6px 16px;
+    border-radius: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    display: inline-block;
+}
+
+.invoice-id-section {
+    padding: 20px 30px;
+    background: white;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+}
+
+.invoice-id, .invoice-date {
+    display: flex;
+    flex-direction: column;
+}
+
+.invoice-id .label, .invoice-date .label {
+    font-size: 12px;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.invoice-id .value, .invoice-date .value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a202c;
+}
+
+/* Customer Details Grid */
+.customer-details-grid {
+    padding: 30px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    background: white;
+}
+
+.detail-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 16px;
+    background: #f7fafc;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+}
+
+.detail-card:hover {
+    background: #edf2f7;
+    transform: translateY(-2px);
+}
+
+.detail-card.full-width {
+    grid-column: 1 / -1;
+}
+
+.detail-icon {
+    font-size: 24px;
+    width: 48px;
+    height: 48px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-label {
+    font-size: 11px;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.detail-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a202c;
+}
+
+/* Order Items Table */
+.order-items-section {
+    padding: 0 30px 30px;
+    background: white;
+}
+
+.order-items-section h3 {
+    font-size: 18px;
+    color: #1a202c;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.invoice-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.invoice-items-table th {
+    text-align: left;
+    padding: 15px 12px;
+    background: #f7fafc;
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.invoice-items-table td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #e9ecef;
+    color: #2d3748;
+}
+
+.product-info-cell {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-name {
+    font-weight: 500;
+    color: #1a202c;
+    margin-bottom: 4px;
+}
+
+.product-color {
+    font-size: 12px;
+    color: #718096;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.invoice-items-table tfoot td {
+    padding: 15px 12px;
+    border-bottom: none;
+}
+
+.invoice-items-table tfoot tr:first-child td {
+    padding-top: 20px;
+}
+
+.summary-label {
+    color: #718096;
+    font-weight: normal;
+}
+
+.summary-value {
+    font-weight: 500;
+    color: #2d3748;
+}
+
+.total-row td {
+    border-top: 2px solid #e9ecef;
+    padding-top: 20px;
+}
+
+.total-label, .total-value {
+    font-size: 16px;
+    color: #1a202c;
+}
+
+.total-value {
+    color: #667eea;
+}
+
+/* Payment Info */
+.payment-method-info {
+    padding: 20px 30px;
+    background: #f7fafc;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.payment-badge, .delivery-estimate {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #4a5568;
+    background: white;
+    padding: 8px 16px;
+    border-radius: 40px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.payment-icon, .estimate-icon {
+    font-size: 18px;
+}
+
+/* Invoice Footer */
+.invoice-footer {
+    padding: 25px 30px;
+    text-align: center;
+    background: white;
+    border-top: 1px solid #e9ecef;
+}
+
+.invoice-footer p {
+    color: #718096;
+    font-size: 14px;
+    margin: 0;
+}
+
+.thank-you {
+    margin-top: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #667eea;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Action Buttons */
+.order-popup-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.order-popup-actions .btn {
+    padding: 14px 30px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.order-popup-actions .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.order-popup-actions .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+}
+
+.order-popup-actions .btn-outline {
+    background: white;
+    border: 2px solid #667eea;
+    color: #667eea;
+}
+
+.order-popup-actions .btn-outline:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-icon {
+    font-size: 18px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Scrollbar Styling */
+.order-popup::-webkit-scrollbar {
+    width: 8px;
+}
+
+.order-popup::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.order-popup::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 4px;
+}
+
+.order-popup::-webkit-scrollbar-thumb:hover {
+    background: #667eea;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .order-popup {
+        border-radius: 24px;
+    }
+
+    .order-popup-header {
+        padding: 20px;
+    }
+
+    .order-popup-header h2 {
+        font-size: 24px;
+    }
+
+    .order-popup-content {
+        padding: 20px;
+    }
+
+    .customer-details-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .invoice-header {
+        padding: 20px;
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .brand-section {
+        text-align: center;
+    }
+
+    .invoice-id-section {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .order-items-section {
+        padding: 0 20px 20px;
+    }
+
+    .payment-method-info {
+        padding: 15px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .payment-badge, .delivery-estimate {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .order-popup-actions {
+        flex-direction: column;
+    }
+
+    .order-popup-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .invoice-footer {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .order-popup-container {
+        padding: 10px;
+    }
+
+    .order-popup {
+        border-radius: 20px;
+    }
+
+    .order-popup-header h2 {
+        font-size: 20px;
+    }
+
+    .success-animation {
+        width: 60px;
+        height: 60px;
+    }
+
+    .checkmark {
+        width: 60px;
+        height: 60px;
+    }
+
+    .detail-card {
+        padding: 12px;
+    }
+
+    .detail-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+    .detail-value {
+        font-size: 14px;
+    }
+
+    .invoice-items-table {
+        font-size: 13px;
+    }
+
+    .invoice-items-table th,
+    .invoice-items-table td {
+        padding: 10px 8px;
+    }
+
+    .total-label, .total-value {
+        font-size: 15px;
+    }
+
+    .thank-you {
+        font-size: 16px;
+    }
+}
+    </style>
+</head>
+<body>
+   <header class="site-header">
+        <div class="container header-container">
+            <div class="logo"><a href="index.html" aria-label="Smokara Home">Smokara</a></div>
+
+            <!-- Desktop Navigation (visible on desktop) -->
+            <div class="nav-cart-wrapper">
+                <nav class="main-nav" aria-label="Main navigation">
+                    <ul>
+                        <li><a href="index.html" class="active">Home</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <a href="cart.html" class="cart-icon" aria-label="Cart"><span class="cart-count">0</span> 🛒</a>
+                </div>
+            </div>
+
+            <!-- Mobile Right Section (cart icon + hamburger) -->
+            <div class="header-right">
+                <div class="header-actions">
+                    <a href="cart.html" class="cart-icon" aria-label="Cart"><span class="cart-count">0</span> 🛒</a>
+                </div>
+                <button class="menu-toggle" aria-label="Menu" aria-expanded="false">
+                    <span class="hamburger"></span><span class="hamburger"></span><span class="hamburger"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container checkout-page">
+            <h1>Checkout</h1>
+            
+            <div class="checkout-layout">
+                <div class="checkout-form">
+                    <h2>Shipping Information</h2>
+                    <form id="checkout-form" action="#" method="POST">
+                        <div class="form-group">
+                            <input type="text" name="name" id="name" placeholder="Full Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" id="email" placeholder="Email Address" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" name="phone" id="phone" placeholder="Phone Number (e.g., 03229553998)" required>
+                            <small style="color: #666; display: block; margin-top: 5px;">Format: 03xxxxxxxxx or +92xxxxxxxxx</small>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="address" id="address" placeholder="Street Address" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" name="city" id="city" placeholder="City" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="postal" id="postal" placeholder="Postal Code">
+                            </div>
+                        </div>
+                        <button type="submit" class="place-order-btn">Place Order</button>
+                    </form>
+                </div>
+                
+                <div class="order-summary">
+                    <h2>Order Summary</h2>
+                    <div class="summary-items" id="order-summary-items">
+                        <!-- Items will be rendered here by JS -->
+                    </div>
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span id="order-subtotal">Rs. 0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery Charges</span>
+                        <span id="order-delivery">Rs. 250.00</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <span id="order-total">Rs. 0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+   <footer class="site-footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <div class="logo">Smokara</div>
+                <p>Modern essentials for a thoughtful life.</p>
+                <p>
+                    <span style="font-weight: bold;">Email us at: </span>
+                    <a href="mailto:arn505050@gmail.com">
+                        arn505050@gmail.com
+                    </a>
+                </p>
+
+                <p>
+                    <span style="font-weight: bold;">Or call: </span>
+                    <a href="tel:+923229553998">
+                        03229553998
+                    </a>
+                </p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="shop.html">All products</a></li>
+                        <li><a href="product-details.html?id=7">The Flower Cases</a></li>
+                        <li><a href="product-details.html?id=4">The Silver Cases</a></li>
+                        <li><a href="product-details.html?id=9">The Focus Edition</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="contact.html">Help</a></li>
+                        <li><a href="contact.html">Report</a></li>
+                        <li><a href="contact.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Sustainability</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-newsletter">
+                <p>Subscribe to our newsletter</p>
+                <form id="newsletter-form">
+                    <input type="email" placeholder="your@email.com" aria-label="Email for newsletter">
+                    <button type="submit" class="btn-submit" aria-label="Subscribe">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>© 2026 Smokara All rights reserved.</p>
+                <p class="footer-legal">
+                    <a href="#">Privacy</a> • <a href="#">Terms</a> • <a href="#">Accessibility</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+    <script src="js/script.js"></script>
+</body>
+</html>

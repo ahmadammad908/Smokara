@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Shop | Smokara — Premium Modern Essentials</title>
+    <meta name="description"
+        content="Browse our collection of premium modern essentials. Minimal design, maximum quality.">
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Critical CSS inlined, full stylesheet loads async -->
+    <link rel="preload" href="css/style.css" as="style">
+    <link rel="stylesheet" href="css/style.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="css/style.css">
+    </noscript>
+
+    <!-- Defer non-critical JS -->
+    <script defer src="js/script.js"></script>
+</head>
+
+<body>
+    <!-- Sticky header with responsive navigation -->
+ <header class="site-header">
+        <div class="container header-container">
+            <div class="logo"><a href="index.html" aria-label="Smokara Home">Smokara</a></div>
+
+            <!-- Desktop Navigation (visible on desktop) -->
+            <div class="nav-cart-wrapper">
+                <nav class="main-nav" aria-label="Main navigation">
+                    <ul>
+                        <li><a href="index.html" class="active">Home</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <a href="cart.html" class="cart-icon" aria-label="Cart"><span class="cart-count">0</span> 🛒</a>
+                </div>
+            </div>
+
+            <!-- Mobile Right Section (cart icon + hamburger) -->
+            <div class="header-right">
+                <div class="header-actions">
+                    <a href="cart.html" class="cart-icon" aria-label="Cart"><span class="cart-count">0</span> 🛒</a>
+                </div>
+                <button class="menu-toggle" aria-label="Menu" aria-expanded="false">
+                    <span class="hamburger"></span><span class="hamburger"></span><span class="hamburger"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Shop Header with Title -->
+        <div class="container shop-header">
+            <h1>All products</h1>
+            <p class="shop-subtitle">Thoughtfully designed essentials for everyday life</p>
+        </div>
+
+        <!-- Search & Filter UI – Premium, Fully Responsive -->
+        <div class="container shop-controls-container">
+            <div class="shop-controls">
+                <!-- Premium Search Bar -->
+                <div class="search-wrapper">
+                    <div class="search-bar">
+                        <span class="search-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M15.5 15.5L19 19M5 11C5 14.3137 7.68629 17 11 17C12.6597 17 14.1621 16.3261 15.2483 15.237C16.3308 14.1517 17 12.654 17 11C17 7.68629 14.3137 5 11 5C7.68629 5 5 7.68629 5 11Z"
+                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </span>
+                        <input type="search" id="search-input" placeholder="Search products..."
+                            aria-label="Search products">
+                        <button class="search-clear" id="search-clear" aria-label="Clear search">✕</button>
+                    </div>
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="filter-wrapper">
+                    <div class="filter-controls">
+                        <div class="select-wrapper">
+                            <select id="category-filter" aria-label="Filter by category">
+                                <option value="all">All categories</option>
+                                <option value="living">Living</option>
+                                <option value="work">Work</option>
+                                <option value="travel">Travel</option>
+                            </select>
+                            <span class="select-arrow">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </span>
+                        </div>
+
+                        <div class="select-wrapper">
+                            <select id="price-filter" aria-label="Sort by price">
+                                <option value="default">Sort by</option>
+                                <option value="low-to-high">Price: Low to High</option>
+                                <option value="high-to-low">Price: High to Low</option>
+                            </select>
+                            <span class="select-arrow">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Filters Display -->
+            <div class="active-filters" id="active-filters">
+                <!-- Dynamically populated by JS -->
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="container product-grid-container">
+            <div class="product-grid" id="shop-products-grid">
+                <!-- Dynamic products from JS -->
+            </div>
+        </div>
+
+        <!-- Products Count & Results Info -->
+        <div class="container results-info" id="results-info">
+            <!-- Dynamically populated by JS -->
+        </div>
+    </main>
+
+    <!-- Professional Footer -->
+ <footer class="site-footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <div class="logo">Smokara</div>
+                <p>Modern essentials for a thoughtful life.</p>
+                <p>
+                    <span style="font-weight: bold;">Email us at: </span>
+                    <a href="mailto:arn505050@gmail.com">
+                        arn505050@gmail.com
+                    </a>
+                </p>
+
+                <p>
+                    <span style="font-weight: bold;">Or call: </span>
+                    <a href="tel:+923229553998">
+                        03229553998
+                    </a>
+                </p>
+
+
+
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="shop.html">All products</a></li>
+                        <li><a href="product-details.html?id=7">The Flower Cases</a></li>
+                        <li><a href="product-details.html?id=4">The Silver Cases</a></li>
+                        <li><a href="product-details.html?id=9">The Focus Edition</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="contact.html">Help</a></li>
+                        <li><a href="contact.html">Report</a></li>
+                        <li><a href="contact.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Sustainability</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-newsletter">
+                <p>Subscribe to our newsletter</p>
+                <form id="newsletter-form">
+                    <input type="email" placeholder="your@email.com" aria-label="Email for newsletter">
+                    <button type="submit" class="btn-submit" aria-label="Subscribe">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>© 2026 Smokara. All rights reserved.</p>
+                <p class="footer-legal">
+                    <a href="#">Privacy</a> • <a href="#">Terms</a> • <a href="#">Accessibility</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add this script for enhanced search functionality -->
+    <script>
+        // Search clear button functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('search-input');
+            const searchClear = document.getElementById('search-clear');
+
+            if (searchInput && searchClear) {
+                // Show/hide clear button based on input
+                const toggleClearButton = () => {
+                    if (searchInput.value.length > 0) {
+                        searchClear.classList.add('visible');
+                    } else {
+                        searchClear.classList.remove('visible');
+                    }
+                };
+
+                // Initial check
+                toggleClearButton();
+
+                // Listen for input changes
+                searchInput.addEventListener('input', toggleClearButton);
+
+                // Clear search on button click
+                searchClear.addEventListener('click', function () {
+                    searchInput.value = '';
+                    searchInput.focus();
+                    toggleClearButton();
+
+                    // Trigger input event for search filtering
+                    const event = new Event('input', { bubbles: true });
+                    searchInput.dispatchEvent(event);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

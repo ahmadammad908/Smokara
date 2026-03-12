@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Product Details | Smokara</title>
+    <meta name="description" content="View product details and discover related items from our premium collection.">
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Critical CSS inlined, full stylesheet loads async -->
+    <link rel="preload" href="css/style.css" as="style">
+    <link rel="stylesheet" href="css/style.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="css/style.css"></noscript>
+    
+    <!-- Defer non-critical JS -->
+    <script defer src="js/script.js"></script>
+</head>
+<body>
+    <!-- Sticky header with responsive navigation -->
+   <header class="site-header">
+        <div class="container header-container">
+            <div class="logo"><a href="index.html" aria-label="Smokara Home">Smokara</a></div>
+
+            <!-- Desktop Navigation (visible on desktop) -->
+            <div class="nav-cart-wrapper">
+                <nav class="main-nav" aria-label="Main navigation">
+                    <ul>
+                        <li><a href="index.html" class="active">Home</a></li>
+                        <li><a href="shop.html">Shop</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <a href="cart.html" class="cart-icon" aria-label="Cart"><span class="cart-count">0</span> 🛒</a>
+                </div>
+            </div>
+
+            <!-- Mobile Right Section (cart icon + hamburger) -->
+            <div class="header-right">
+                <div class="header-actions">
+                    <a href="cart.html" class="cart-icon" aria-label="Cart"><span class="cart-count">0</span> 🛒</a>
+                </div>
+                <button class="menu-toggle" aria-label="Menu" aria-expanded="false">
+                    <span class="hamburger"></span><span class="hamburger"></span><span class="hamburger"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <main>
+        <!-- Product Detail Section -->
+        <div class="container product-detail-page">
+            <div id="product-detail-container">
+                <!-- Fully dynamic product detail injected via JS -->
+            </div>
+        </div>
+
+        <!-- Suggested Products Section -->
+        <div class="container suggested-products-section">
+            <div class="suggested-header">
+                <h2 class="section-title">You may also like</h2>
+                <p class="section-subtitle">Complete your collection with these essentials</p>
+            </div>
+            <div id="suggested-products-grid" class="product-grid">
+                <!-- Suggested products injected dynamically via JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Professional Footer -->
+ <footer class="site-footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <div class="logo">Smokara</div>
+                <p>Modern essentials for a thoughtful life.</p>
+                <p>
+                    <span style="font-weight: bold;">Email us at: </span>
+                    <a href="mailto:arn505050@gmail.com">
+                        arn505050@gmail.com
+                    </a>
+                </p>
+
+                <p>
+                    <span style="font-weight: bold;">Or call: </span>
+                    <a href="tel:+923229553998">
+                        03229553998
+                    </a>
+                </p>
+
+
+
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Shop</h4>
+                    <ul>
+                        <li><a href="shop.html">All products</a></li>
+                        <li><a href="product-details.html?id=7">The Flower Cases</a></li>
+                        <li><a href="product-details.html?id=4">The Silver Cases</a></li>
+                        <li><a href="product-details.html?id=9">The Focus Edition</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="contact.html">Help</a></li>
+                        <li><a href="contact.html">Report</a></li>
+                        <li><a href="contact.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Sustainability</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-newsletter">
+                <p>Subscribe to our newsletter</p>
+                <form id="newsletter-form">
+                    <input type="email" placeholder="your@email.com" aria-label="Email for newsletter">
+                    <button type="submit" class="btn-submit" aria-label="Subscribe">→</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>© 2026 Smokara All rights reserved.</p>
+                <p class="footer-legal">
+                    <a href="#">Privacy</a> • <a href="#">Terms</a> • <a href="#">Accessibility</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
