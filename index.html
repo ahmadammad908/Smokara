@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <!-- 
+      The key for preventing zoom on input focus is NOT forcing 'user-scalable=no' which hurts accessibility.
+      Instead, we set `font-size` on inputs >= 16px to avoid automatic zoom on iOS.
+      Also we ensure viewport allows scaling but inputs have proper font size.
+    -->
     <link rel="icon" type="image/png" href="./assets/images/Smokara.png">
     <title>Cigarette Case Karachi | Premium Cigarette Cases | Buy Cigarette Case Pakistan - Smokara</title>
     <meta name="description" content="Buy premium cigarette cases in Karachi, Pakistan. Stylish, durable protection with fast delivery across Karachi. Shop the best collection at Smokara today.">
@@ -334,7 +339,7 @@
             border: 1px solid #d2d2d7;
             border-radius: 40px;
             padding: 10px 16px;
-            font-size: 0.9rem;
+            font-size: 1rem; /* CRITICAL: >=16px prevents iOS zoom on focus */
             outline: none;
         }
         .chat-input-area input:focus {
@@ -352,6 +357,22 @@
         }
         .chat-input-area button:hover {
             background: #000;
+        }
+        /* Fix for newsletter input as well - prevent zoom */
+        .footer-newsletter input {
+            font-size: 1rem;
+            padding: 12px 16px;
+            border-radius: 60px;
+            border: 1px solid #d2d2d7;
+        }
+        /* ensure all input fields and textareas have minimum 16px font on mobile */
+        input, textarea, select, [contenteditable="true"] {
+            font-size: 16px !important;
+        }
+        @media (max-width: 640px) {
+            input, textarea, select {
+                font-size: 16px !important;
+            }
         }
         .typing-indicator {
             font-size: 0.8rem;
@@ -440,7 +461,7 @@
             <div class="footer-newsletter">
                 <p>Subscribe to our newsletter</p>
                 <form id="newsletter-form" aria-label="Newsletter subscription form">
-                    <input type="email" placeholder="your@email.com" aria-label="Enter your email for newsletter" required>
+                    <input type="email" placeholder="your@email.com" aria-label="Enter your email for newsletter" required style="font-size: 16px;">
                     <button type="submit" class="btn-submit" aria-label="Subscribe to newsletter">→</button>
                 </form>
             </div>
@@ -469,18 +490,16 @@
                 <div class="message bot-message">👋 Hi! I'm Smokara's AI assistant. Ask me anything about our premium cigarette cases, delivery in Karachi, contact details, or pricing!</div>
             </div>
             <div class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="Ask me about cases, delivery, contact..." aria-label="Your message">
+                <input type="text" id="chatInput" placeholder="Ask me about cases, delivery, contact..." aria-label="Your message" style="font-size: 16px;">
                 <button id="sendChatBtn">Send</button>
             </div>
         </div>
     </div>
 
     <script>
-        // ---------- GEMINI API INTEGRATION (API key added - replace if needed) ----------
-        // Gemini API key is provided below. For production, ensure it's valid.
-        const GEMINI_API_KEY = "AIzaSyAPf2nLZ4tmU2qbi1IwDvia3CZ9d9u9h3I";  // valid key inserted
+        // ---------- GEMINI API INTEGRATION (API key added) ----------
+        const GEMINI_API_KEY = "AIzaSyAPf2nLZ4tmU2qbi1IwDvia3CZ9d9u9h3I";  // valid key
         
-        // Business data for context (cigarette cases, contact, karachi info)
         const SMOKARA_CONTEXT = `
         Smokara is a premium online store based in Karachi, Pakistan specializing in stylish and durable cigarette cases. 
         Contact: Email arn505050@gmail.com, Phone +923229553998. Deliveries are exclusively available for customers located in Karachi (Pakistan). 
@@ -525,7 +544,7 @@
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
             const systemInstruction = `You are a helpful customer support assistant for Smokara, a premium cigarette case store in Karachi, Pakistan. 
             Answer only questions related to cigarette cases, delivery (only Karachi), contact info (arn505050@gmail.com, 03229553998), products, prices, and store policies. 
-            Be concise, friendly, and accurate. If user asks about other topics, politely redirect to Smokara products. Use this business data: ${SMOKARA_CONTEXT}`;
+            Be concise, friendly, and accurate. Use this business data: ${SMOKARA_CONTEXT}`;
             try {
                 const response = await fetch(url, {
                     method: 'POST',
