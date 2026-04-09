@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
     <link rel="icon" type="image/png" href="./assets/images/Smokara.png">
     <title>Cigarette Case Karachi | Premium Cigarette Cases | Buy Cigarette Case Pakistan - Smokara</title>
     <meta name="description" content="Buy premium cigarette cases in Karachi, Pakistan. Stylish, durable protection with fast delivery across Karachi. Shop the best collection at Smokara today.">
@@ -376,9 +376,11 @@
             padding: 12px 16px;
             border: 1px solid #ccc;
             border-radius: 60px;
-            font-size: 0.9rem;
+            font-size: 16px; /* 16px prevents zoom on mobile focus */
             outline: none;
             transition: border 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
         }
         .chat-input-area input:focus {
             border-color: #1d1d1f;
@@ -665,8 +667,11 @@
                     const isOpen = chatWindow.classList.contains('open');
                     if (!isOpen) {
                         chatWindow.classList.add('open');
+                        // Focus input after chat opens - ensures keyboard on mobile without zoom
                         setTimeout(() => {
                             chatInput.focus();
+                            // Prevent any potential scroll/zoom side effects
+                            if (window.scrollY) window.scrollTo(0, window.scrollY);
                         }, 100);
                     }
                 };
@@ -689,7 +694,10 @@
                         handleSendMessage();
                     }
                 });
-                // auto-focus handling already inside openChat for mobile
+                // Extra: ensure that tapping input field does not cause zoom - already prevented by font-size:16px
+                chatInput.addEventListener('touchstart', function(e) {
+                    // just to ensure no extra zoom behavior; the 16px already prevents zoom
+                });
             }
             
             if (document.readyState === 'loading') {
