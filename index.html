@@ -2,12 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <!-- 
-      The key for preventing zoom on input focus is NOT forcing 'user-scalable=no' which hurts accessibility.
-      Instead, we set `font-size` on inputs >= 16px to avoid automatic zoom on iOS.
-      Also we ensure viewport allows scaling but inputs have proper font size.
-    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <link rel="icon" type="image/png" href="./assets/images/Smokara.png">
     <title>Cigarette Case Karachi | Premium Cigarette Cases | Buy Cigarette Case Pakistan - Smokara</title>
     <meta name="description" content="Buy premium cigarette cases in Karachi, Pakistan. Stylish, durable protection with fast delivery across Karachi. Shop the best collection at Smokara today.">
@@ -215,69 +210,107 @@
             transform: scale(1.02);
             box-shadow: 0 12px 28px rgba(0,0,0,0.2);
         }
+        /* make sure popup sits above everything */
         body.popup-active { overflow: hidden; }
 
-        /* ---- AI CHAT STYLES (non-intrusive) with "Ask AI" label on icon ---- */
-        .ai-chat-widget {
+        /* ---------- AI CHATBOT STYLES (added, no existing design touched) ---------- */
+        .chatbot-widget {
             position: fixed;
             bottom: 24px;
             right: 24px;
             z-index: 10001;
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
         }
-        .chat-toggle-btn {
-            background: #1d1d1f;
-            border: none;
-            width: auto;
-            min-width: 70px;
-            height: 60px;
-            border-radius: 60px;
+        /* Chat toggle button with Ask AI label and animation */
+        .chat-toggle-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .chat-toggle {
+            width: 60px;
+            height: 60px;
+            background: #1d1d1f;
+            border-radius: 60px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            transition: transform 0.2s, background 0.2s;
+            transition: transform 0.2s ease, background 0.2s;
+            border: none;
             color: white;
-            font-size: 18px;
-            font-weight: 600;
-            padding: 0 20px;
+            font-size: 28px;
         }
-        .chat-toggle-btn:hover {
-            background: #000;
+        .chat-toggle:hover {
             transform: scale(1.05);
+            background: #000;
         }
-        .chat-toggle-btn span:first-child {
-            font-size: 26px;
+        .ask-ai-label {
+            background: #1d1d1f;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: gentlePulse 1.8s ease-in-out infinite, slideInRight 0.4s ease-out;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        @keyframes gentlePulse {
+            0%, 100% { transform: scale(1); opacity: 0.95; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+            50% { transform: scale(1.04); opacity: 1; box-shadow: 0 6px 18px rgba(0,0,0,0.2); background: #2a2a2c; }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        /* on mobile, adjust label size */
+        @media (max-width: 550px) {
+            .ask-ai-label {
+                padding: 5px 12px;
+                font-size: 0.7rem;
+            }
+            .chat-toggle {
+                width: 52px;
+                height: 52px;
+                font-size: 24px;
+            }
         }
         .chat-window {
             position: absolute;
             bottom: 80px;
             right: 0;
             width: 360px;
-            max-width: calc(100vw - 40px);
+            height: 500px;
             background: #ffffff;
             border-radius: 28px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            transition: opacity 0.25s ease, visibility 0.25s, transform 0.2s;
+            transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
             opacity: 0;
             visibility: hidden;
-            transform: translateY(12px);
-            border: 1px solid #e5e5ea;
+            transform: scale(0.92) translateY(10px);
+            pointer-events: none;
         }
         .chat-window.open {
             opacity: 1;
             visibility: visible;
-            transform: translateY(0);
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
         }
         .chat-header {
             background: #1d1d1f;
             color: white;
-            padding: 16px 20px;
+            padding: 16px 18px;
             font-weight: 600;
             font-size: 1.1rem;
             display: flex;
@@ -297,50 +330,55 @@
             cursor: pointer;
             line-height: 1;
             padding: 0;
+            opacity: 0.7;
+            transition: opacity 0.2s;
         }
+        .close-chat:hover { opacity: 1; }
         .chat-messages {
-            height: 380px;
+            flex: 1;
             overflow-y: auto;
             padding: 16px;
-            background: #f9f9fb;
             display: flex;
             flex-direction: column;
             gap: 12px;
+            background: #f9f9fb;
         }
         .message {
             max-width: 85%;
             padding: 10px 14px;
-            border-radius: 24px;
+            border-radius: 22px;
             font-size: 0.9rem;
             line-height: 1.4;
             word-break: break-word;
         }
         .user-message {
+            align-self: flex-end;
             background: #1d1d1f;
             color: white;
-            align-self: flex-end;
             border-bottom-right-radius: 6px;
         }
         .bot-message {
-            background: #e5e5ea;
-            color: #1d1d1f;
             align-self: flex-start;
+            background: #e8e8ed;
+            color: #1d1d1f;
             border-bottom-left-radius: 6px;
         }
         .chat-input-area {
-            display: flex;
-            padding: 12px;
-            border-top: 1px solid #e5e5ea;
+            padding: 12px 16px;
             background: white;
-            gap: 8px;
+            border-top: 1px solid #e2e2e6;
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
         .chat-input-area input {
             flex: 1;
-            border: 1px solid #d2d2d7;
-            border-radius: 40px;
-            padding: 10px 16px;
-            font-size: 1rem; /* CRITICAL: >=16px prevents iOS zoom on focus */
+            padding: 12px 16px;
+            border: 1px solid #ccc;
+            border-radius: 60px;
+            font-size: 0.9rem;
             outline: none;
+            transition: border 0.2s;
         }
         .chat-input-area input:focus {
             border-color: #1d1d1f;
@@ -348,45 +386,319 @@
         .chat-input-area button {
             background: #1d1d1f;
             border: none;
-            border-radius: 40px;
-            padding: 0 20px;
             color: white;
-            font-weight: 600;
+            width: 44px;
+            height: 44px;
+            border-radius: 44px;
             cursor: pointer;
-            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: background 0.2s;
         }
-        .chat-input-area button:hover {
-            background: #000;
-        }
-        /* Fix for newsletter input as well - prevent zoom */
-        .footer-newsletter input {
-            font-size: 1rem;
-            padding: 12px 16px;
-            border-radius: 60px;
-            border: 1px solid #d2d2d7;
-        }
-        /* ensure all input fields and textareas have minimum 16px font on mobile */
-        input, textarea, select, [contenteditable="true"] {
-            font-size: 16px !important;
-        }
-        @media (max-width: 640px) {
-            input, textarea, select {
-                font-size: 16px !important;
-            }
+        .chat-input-area button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         .typing-indicator {
             font-size: 0.8rem;
             color: #6e6e73;
-            padding: 5px 12px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            padding: 8px 14px;
+            background: #e8e8ed;
+            border-radius: 20px;
+            width: fit-content;
         }
-        .typing-indicator span {
-            animation: blink 1.4s infinite;
+        @media (max-width: 500px) {
+            .chat-window {
+                width: 320px;
+                height: 480px;
+                right: 0;
+                bottom: 70px;
+            }
         }
-        @keyframes blink { 0%,100%{opacity:0.2} 50%{opacity:1} }
     </style>
+    <script defer src="js/script.js"></script>
+    <script>
+        (function() {
+            // **MAINTENANCE POPUP LOGIC** — appears first with animation & company name
+            document.addEventListener('DOMContentLoaded', function() {
+                const overlay = document.createElement('div');
+                overlay.className = 'maintenance-popup';
+                overlay.id = 'maintenancePopup';
+                overlay.setAttribute('role', 'dialog');
+                overlay.setAttribute('aria-modal', 'true');
+                overlay.setAttribute('aria-label', 'Maintenance notice');
+                overlay.innerHTML = `
+                    <div class="popup-card">
+                        <div class="popup-icon">🔧✨</div>
+                        <div class="popup-title">we’re tuning up</div>
+                        <div class="popup-company">Smokara</div>
+                        <div class="popup-message">Website under scheduled maintenance</div>
+                        <div class="popup-note">Karachi deliveries will resume shortly</div>
+                        <button class="popup-btn" id="closePopupBtn">got it, continue</button>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+                document.body.classList.add('popup-active');
+                setTimeout(() => {
+                    overlay.classList.add('active');
+                }, 200);
+                const closeBtn = document.getElementById('closePopupBtn');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        overlay.classList.remove('active');
+                        setTimeout(() => {
+                            overlay.style.display = 'none';
+                        }, 400);
+                        document.body.classList.remove('popup-active');
+                    });
+                }
+            });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                setTimeout(function () {
+                    const loader = document.getElementById('essenceLoader');
+                    if (loader) loader.classList.add('hidden');
+                }, 1500);
+
+                const heroVisual = document.querySelector('.hero-visual');
+                if (heroVisual) {
+                    heroVisual.innerHTML = '';
+                    const premiumDemoImages = [
+                        "https://i.pinimg.com/736x/ff/a0/e5/ffa0e5d90234cc4677c8db4efa5a2dd8.jpg",
+                        "https://i.pinimg.com/1200x/ec/69/6a/ec696ad06923cc54a95aef401c680be2.jpg",
+                        "https://i.pinimg.com/1200x/7e/c1/53/7ec153850558d929a0b29f4dc1862e8e.jpg",
+                        "https://i.pinimg.com/736x/87/92/9c/87929c29ecf82821e4550579b86b93f3.jpg"
+                    ];
+                    const track = document.createElement('div');
+                    track.className = 'slider-track';
+                    premiumDemoImages.forEach(src => {
+                        const slide = document.createElement('div');
+                        slide.className = 'slide';
+                        const img = document.createElement('img');
+                        img.src = src;
+                        img.alt = 'Premium cigarette case collection - Smokara Karachi';
+                        img.loading = 'eager';
+                        slide.appendChild(img);
+                        track.appendChild(slide);
+                    });
+                    heroVisual.appendChild(track);
+                }
+
+                const featuredGrid = document.getElementById('featured-products-grid');
+                if (!featuredGrid) return;
+                const loadProducts = () => {
+                    if (!window.essence || !window.essence.products) {
+                        setTimeout(loadProducts, 50);
+                        return;
+                    }
+                    const allProducts = window.essence.products;
+                    const itemsPerPage = 4;
+                    let currentIndex = 0;
+                    const renderChunk = (start, end) => {
+                        const chunk = allProducts.slice(start, end);
+                        chunk.forEach(prod => {
+                            const card = document.createElement('div');
+                            card.className = 'product-card';
+                            card.dataset.id = prod.id;
+                            card.innerHTML = `
+                                <a href="product-details.html?id=${prod.id}" class="product-link" aria-label="View ${prod.name} details">
+                                    <img src="${prod.image}" alt="${prod.name} - Premium cigarette case available in Karachi" loading="lazy" width="400" height="400">
+                                    <div class="product-info">
+                                        <span class="product-category">${prod.category}</span>
+                                        <h3 class="product-title">${prod.name}</h3>
+                                        <p class="product-price">Rs. ${prod.price.toFixed(2)}</p>
+                                    </div>
+                                </a>
+                                <button class="btn btn-outline add-to-cart-btn" data-id="${prod.id}" aria-label="Add ${prod.name} to cart">Add to cart</button>
+                            `;
+                            featuredGrid.appendChild(card);
+                        });
+                    };
+                    if (allProducts.length) {
+                        renderChunk(0, itemsPerPage);
+                        currentIndex = itemsPerPage;
+                    }
+                    const wrapper = document.querySelector('.load-more-wrapper');
+                    const loadMoreBtn = wrapper?.querySelector('.load-more-btn');
+                    if (currentIndex >= allProducts.length && loadMoreBtn) loadMoreBtn.style.display = 'none';
+                    if (loadMoreBtn) {
+                        loadMoreBtn.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            const nextIndex = currentIndex + itemsPerPage;
+                            renderChunk(currentIndex, Math.min(nextIndex, allProducts.length));
+                            currentIndex = Math.min(nextIndex, allProducts.length);
+                            if (currentIndex >= allProducts.length) {
+                                loadMoreBtn.disabled = true;
+                                loadMoreBtn.textContent = 'All products loaded';
+                                loadMoreBtn.style.opacity = '0.6';
+                            }
+                        });
+                    }
+                };
+                loadProducts();
+            });
+        })();
+    </script>
+    <!-- Google Gemini API Integration with Key -->
+    <script>
+        // ========== CHATBOT INTEGRATION (Gemini API, concise replies, Ask AI label with animation) ==========
+        (function() {
+            // Valid Gemini API key provided
+            const GEMINI_API_KEY = "AIzaSyBPePHi52TygEpcgRoepImXkwv9U_m8xIk"; 
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+            
+            let chatWindow = null;
+            let chatMessagesDiv = null;
+            let chatInput = null;
+            let sendBtn = null;
+            let isWaitingForResponse = false;
+            
+            function buildSystemPrompt() {
+                return `You are Smokara AI assistant for a cigarette case brand. Keep replies VERY short, clear, and helpful (1-2 sentences max). 
+                Company: Smokara, CEO: Abdul Rehman Naseem. Contact: email arn505050@gmail.com, phone +923229553998. 
+                Products: premium cigarette cases (Flower, Silver, Focus, leather). Deliveries only in Karachi. No physical store.
+                Do NOT add extra explanations or bullet points. Answer concisely. Never repeat the same info. Only one reply per user message.`;
+            }
+            
+            async function getGeminiReply(userMessage) {
+                try {
+                    const response = await fetch(API_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            contents: [
+                                { role: "user", parts: [{ text: buildSystemPrompt() + "\nUser: " + userMessage }] }
+                            ],
+                            generationConfig: { temperature: 0.4, maxOutputTokens: 120, topP: 0.9 }
+                        })
+                    });
+                    if (!response.ok) {
+                        return "⚠️ AI service busy. Try again.";
+                    }
+                    const data = await response.json();
+                    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "I couldn't process that. Ask about our cases or Karachi delivery.";
+                    return reply.trim();
+                } catch (err) {
+                    console.error("Gemini error:", err);
+                    return "📡 Network issue. Please check connection.";
+                }
+            }
+            
+            function addMessage(text, isUser) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+                msgDiv.textContent = text;
+                chatMessagesDiv.appendChild(msgDiv);
+                chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+            }
+            
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'typing-indicator';
+                typingDiv.id = 'typingIndicator';
+                typingDiv.textContent = 'Smokara is typing...';
+                chatMessagesDiv.appendChild(typingDiv);
+                chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+            }
+            
+            function removeTypingIndicator() {
+                const indicator = document.getElementById('typingIndicator');
+                if (indicator) indicator.remove();
+            }
+            
+            async function handleSendMessage() {
+                if (isWaitingForResponse) return;
+                const message = chatInput.value.trim();
+                if (!message) return;
+                addMessage(message, true);
+                chatInput.value = '';
+                isWaitingForResponse = true;
+                sendBtn.disabled = true;
+                showTypingIndicator();
+                const reply = await getGeminiReply(message);
+                removeTypingIndicator();
+                addMessage(reply, false);
+                isWaitingForResponse = false;
+                sendBtn.disabled = false;
+                chatInput.focus();
+            }
+            
+            function buildChatWidget() {
+                const widgetDiv = document.createElement('div');
+                widgetDiv.className = 'chatbot-widget';
+                widgetDiv.innerHTML = `
+                    <div class="chat-toggle-wrapper" id="chatToggleWrapper">
+                        <span class="ask-ai-label">✨ Ask AI ✨</span>
+                        <button class="chat-toggle" id="chatToggleBtn" aria-label="Open AI Chat">💬</button>
+                    </div>
+                    <div class="chat-window" id="chatWindow">
+                        <div class="chat-header">
+                            <span>🤖 Smokara AI</span>
+                            <button class="close-chat" id="closeChatBtn" aria-label="Close chat">✕</button>
+                        </div>
+                        <div class="chat-messages" id="chatMessages"></div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chatInput" placeholder="Ask about cases, delivery, or CEO..." autocomplete="off">
+                            <button id="sendChatBtn" aria-label="Send message">➤</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(widgetDiv);
+                chatWindow = document.getElementById('chatWindow');
+                chatMessagesDiv = document.getElementById('chatMessages');
+                chatInput = document.getElementById('chatInput');
+                sendBtn = document.getElementById('sendChatBtn');
+                const toggleWrapper = document.getElementById('chatToggleWrapper');
+                const toggleBtn = document.getElementById('chatToggleBtn');
+                const closeBtn = document.getElementById('closeChatBtn');
+                
+                // initial greeting
+                setTimeout(() => {
+                    if (chatMessagesDiv && chatMessagesDiv.children.length === 0) {
+                        addMessage("Hi! I'm Smokara assistant. Ask me about cases, delivery, CEO Abdul Rehman Naseem, or contact. 😊", false);
+                    }
+                }, 1000);
+                
+                const openChat = () => {
+                    const isOpen = chatWindow.classList.contains('open');
+                    if (!isOpen) {
+                        chatWindow.classList.add('open');
+                        setTimeout(() => {
+                            chatInput.focus();
+                        }, 100);
+                    }
+                };
+                
+                const closeChat = () => chatWindow.classList.remove('open');
+                
+                toggleWrapper.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openChat();
+                });
+                toggleBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openChat();
+                });
+                closeBtn.addEventListener('click', closeChat);
+                sendBtn.addEventListener('click', handleSendMessage);
+                chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleSendMessage();
+                    }
+                });
+                // auto-focus handling already inside openChat for mobile
+            }
+            
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', buildChatWidget);
+            } else {
+                buildChatWidget();
+            }
+        })();
+    </script>
 </head>
 <body>
     <!-- essence loader -->
@@ -461,7 +773,7 @@
             <div class="footer-newsletter">
                 <p>Subscribe to our newsletter</p>
                 <form id="newsletter-form" aria-label="Newsletter subscription form">
-                    <input type="email" placeholder="your@email.com" aria-label="Enter your email for newsletter" required style="font-size: 16px;">
+                    <input type="email" placeholder="your@email.com" aria-label="Enter your email for newsletter" required>
                     <button type="submit" class="btn-submit" aria-label="Subscribe to newsletter">→</button>
                 </form>
             </div>
@@ -475,166 +787,5 @@
     </footer>
 
     <link rel="stylesheet" href="css/style.css">
-    
-    <!-- AI Chat Widget with Gemini API - clearly labeled "Ask AI" -->
-    <div class="ai-chat-widget" id="aiChatWidget">
-        <button class="chat-toggle-btn" id="chatToggleBtn" aria-label="Chat with Smokara AI assistant">
-            <span>🤖</span> <span>Ask AI</span>
-        </button>
-        <div class="chat-window" id="chatWindow">
-            <div class="chat-header">
-                <span>✨ Smokara AI Assistant</span>
-                <button class="close-chat" id="closeChatBtn" aria-label="Close chat">✕</button>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot-message">👋 Hi! I'm Smokara's AI assistant. Ask me anything about our premium cigarette cases, delivery in Karachi, contact details, or pricing!</div>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="Ask me about cases, delivery, contact..." aria-label="Your message" style="font-size: 16px;">
-                <button id="sendChatBtn">Send</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ---------- GEMINI API INTEGRATION (API key added) ----------
-        const GEMINI_API_KEY = "AIzaSyAPf2nLZ4tmU2qbi1IwDvia3CZ9d9u9h3I";  // valid key
-        
-        const SMOKARA_CONTEXT = `
-        Smokara is a premium online store based in Karachi, Pakistan specializing in stylish and durable cigarette cases. 
-        Contact: Email arn505050@gmail.com, Phone +923229553998. Deliveries are exclusively available for customers located in Karachi (Pakistan). 
-        Smokara is not a physical store, only online. Products include The Flower Cases, Silver Cases, Focus Edition, and many elegant designs. 
-        Prices range from Rs. 1200 to Rs. 4500 depending on model. Customer support available via email or phone. 
-        All cigarette cases protect cigarettes, keep them fresh, and offer sleek design. Best sellers include leather finish, metal cases, and artistic patterns.
-        `;
-        
-        const chatMessagesDiv = document.getElementById('chatMessages');
-        const chatInput = document.getElementById('chatInput');
-        const sendBtn = document.getElementById('sendChatBtn');
-        const chatWindow = document.getElementById('chatWindow');
-        const toggleBtn = document.getElementById('chatToggleBtn');
-        const closeChatBtn = document.getElementById('closeChatBtn');
-        
-        function addMessage(text, isUser = false) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-            msgDiv.textContent = text;
-            chatMessagesDiv.appendChild(msgDiv);
-            chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
-        }
-        
-        function showTypingIndicator() {
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'typing-indicator';
-            typingDiv.id = 'typingIndicator';
-            typingDiv.innerHTML = '<span>●</span><span>●</span><span>●</span> Smokara AI is thinking...';
-            chatMessagesDiv.appendChild(typingDiv);
-            chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
-        }
-        
-        function removeTypingIndicator() {
-            const indicator = document.getElementById('typingIndicator');
-            if (indicator) indicator.remove();
-        }
-        
-        async function getGeminiResponse(userQuery) {
-            if (!GEMINI_API_KEY || GEMINI_API_KEY === "YOUR_GEMINI_API_KEY_HERE") {
-                return localFallbackResponse(userQuery);
-            }
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
-            const systemInstruction = `You are a helpful customer support assistant for Smokara, a premium cigarette case store in Karachi, Pakistan. 
-            Answer only questions related to cigarette cases, delivery (only Karachi), contact info (arn505050@gmail.com, 03229553998), products, prices, and store policies. 
-            Be concise, friendly, and accurate. Use this business data: ${SMOKARA_CONTEXT}`;
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: `${systemInstruction}\n\nCustomer question: ${userQuery}` }]
-                        }]
-                    })
-                });
-                const data = await response.json();
-                if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
-                    return data.candidates[0].content.parts[0].text;
-                } else {
-                    return localFallbackResponse(userQuery);
-                }
-            } catch (error) {
-                console.warn("Gemini API error, using fallback", error);
-                return localFallbackResponse(userQuery);
-            }
-        }
-        
-        function localFallbackResponse(query) {
-            const lower = query.toLowerCase();
-            if (lower.includes('delivery') || lower.includes('karachi')) return "We deliver exclusively in Karachi, Pakistan. Orders are shipped within 2-3 business days. Contact us for any delivery questions!";
-            if (lower.includes('contact') || lower.includes('email') || lower.includes('phone')) return "You can reach Smokara via email: arn505050@gmail.com or call/WhatsApp: +923229553998. We're happy to assist!";
-            if (lower.includes('price') || lower.includes('cost')) return "Our premium cigarette cases range from Rs. 1,200 to Rs. 4,500 depending on design and material. Check our Shop page for current pricing!";
-            if (lower.includes('case') || lower.includes('cigarette')) return "Smokara offers stylish, durable cigarette cases that keep your cigarettes fresh and protected. Explore bestsellers like The Flower Cases, Silver Cases, and Focus Edition.";
-            if (lower.includes('store') || lower.includes('physical')) return "Smokara is an online-only store based in Karachi, Pakistan. We don't have a physical showroom but provide fast delivery within Karachi.";
-            return "Thanks for reaching out! I can help with product details, delivery (Karachi only), contact info, and pricing. Could you rephrase your question?";
-        }
-        
-        async function handleSend() {
-            const userText = chatInput.value.trim();
-            if (!userText) return;
-            addMessage(userText, true);
-            chatInput.value = '';
-            showTypingIndicator();
-            const botReply = await getGeminiResponse(userText);
-            removeTypingIndicator();
-            addMessage(botReply, false);
-        }
-        
-        sendBtn.addEventListener('click', handleSend);
-        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
-        toggleBtn.addEventListener('click', () => { chatWindow.classList.toggle('open'); });
-        closeChatBtn.addEventListener('click', () => { chatWindow.classList.remove('open'); });
-        
-        // preserve other original scripts (loader, slider, product grid)
-        (function() {
-            document.addEventListener('DOMContentLoaded', function () {
-                setTimeout(function () { const loader = document.getElementById('essenceLoader'); if (loader) loader.classList.add('hidden'); }, 1500);
-                const heroVisual = document.querySelector('.hero-visual');
-                if (heroVisual) {
-                    heroVisual.innerHTML = '';
-                    const premiumDemoImages = [
-                        "https://i.pinimg.com/736x/ff/a0/e5/ffa0e5d90234cc4677c8db4efa5a2dd8.jpg",
-                        "https://i.pinimg.com/1200x/ec/69/6a/ec696ad06923cc54a95aef401c680be2.jpg",
-                        "https://i.pinimg.com/1200x/7e/c1/53/7ec153850558d929a0b29f4dc1862e8e.jpg",
-                        "https://i.pinimg.com/736x/87/92/9c/87929c29ecf82821e4550579b86b93f3.jpg"
-                    ];
-                    const track = document.createElement('div'); track.className = 'slider-track';
-                    premiumDemoImages.forEach(src => { const slide = document.createElement('div'); slide.className = 'slide'; const img = document.createElement('img'); img.src = src; img.alt = 'Premium cigarette case collection - Smokara Karachi'; img.loading = 'eager'; slide.appendChild(img); track.appendChild(slide); });
-                    heroVisual.appendChild(track);
-                }
-                const featuredGrid = document.getElementById('featured-products-grid');
-                if (!featuredGrid) return;
-                const loadProducts = () => {
-                    if (!window.essence || !window.essence.products) { setTimeout(loadProducts, 50); return; }
-                    const allProducts = window.essence.products; const itemsPerPage = 4; let currentIndex = 0;
-                    const renderChunk = (start, end) => { const chunk = allProducts.slice(start, end); chunk.forEach(prod => { const card = document.createElement('div'); card.className = 'product-card'; card.dataset.id = prod.id; card.innerHTML = `<a href="product-details.html?id=${prod.id}" class="product-link"><img src="${prod.image}" alt="${prod.name}" loading="lazy"><div class="product-info"><span class="product-category">${prod.category}</span><h3 class="product-title">${prod.name}</h3><p class="product-price">Rs. ${prod.price.toFixed(2)}</p></div></a><button class="btn btn-outline add-to-cart-btn" data-id="${prod.id}">Add to cart</button>`; featuredGrid.appendChild(card); }); };
-                    if (allProducts.length) { renderChunk(0, itemsPerPage); currentIndex = itemsPerPage; }
-                    const wrapper = document.querySelector('.load-more-wrapper'); const loadMoreBtn = wrapper?.querySelector('.load-more-btn');
-                    if (currentIndex >= allProducts.length && loadMoreBtn) loadMoreBtn.style.display = 'none';
-                    if (loadMoreBtn) loadMoreBtn.addEventListener('click', function () { const nextIndex = currentIndex + itemsPerPage; renderChunk(currentIndex, Math.min(nextIndex, allProducts.length)); currentIndex = Math.min(nextIndex, allProducts.length); if (currentIndex >= allProducts.length) { loadMoreBtn.disabled = true; loadMoreBtn.textContent = 'All products loaded'; } });
-                };
-                loadProducts();
-            });
-            window.essence = window.essence || {};
-            if (!window.essence.products) window.essence.products = [
-                { id:1, name:"Midnight Onyx Case", category:"Leather Series", price:2450, image:"https://i.pinimg.com/736x/ff/a0/e5/ffa0e5d90234cc4677c8db4efa5a2dd8.jpg" },
-                { id:2, name:"Rose Gold Elegance", category:"Metallic", price:3290, image:"https://i.pinimg.com/1200x/ec/69/6a/ec696ad06923cc54a95aef401c680be2.jpg" },
-                { id:3, name:"Slim Carbon Fiber", category:"Ultra Slim", price:1890, image:"https://i.pinimg.com/1200x/7e/c1/53/7ec153850558d929a0b29f4dc1862e8e.jpg" },
-                { id:4, name:"Vintage Brass", category:"Retro", price:4100, image:"https://i.pinimg.com/736x/87/92/9c/87929c29ecf82821e4550579b86b93f3.jpg" },
-                { id:5, name:"The Flower Cases", category:"Art Edition", price:3750, image:"https://i.pinimg.com/736x/ff/a0/e5/ffa0e5d90234cc4677c8db4efa5a2dd8.jpg" },
-                { id:6, name:"Focus Edition", category:"Limited", price:4499, image:"https://i.pinimg.com/1200x/ec/69/6a/ec696ad06923cc54a95aef401c680be2.jpg" }
-            ];
-        })();
-        // maintenance popup remains unchanged (compatibility)
-        (function(){ const overlayDiv = document.createElement('div'); overlayDiv.className = 'maintenance-popup'; overlayDiv.id = 'maintenancePopup'; overlayDiv.innerHTML = `<div class="popup-card"><div class="popup-icon">🔧✨</div><div class="popup-title">we’re tuning up</div><div class="popup-company">Smokara</div><div class="popup-message">Website under scheduled maintenance</div><div class="popup-note">Karachi deliveries will resume shortly</div><button class="popup-btn" id="closePopupBtn">got it, continue</button></div>`; document.body.appendChild(overlayDiv); document.body.classList.add('popup-active'); setTimeout(()=>{ const pop = document.getElementById('maintenancePopup'); if(pop) pop.classList.add('active'); },200); document.getElementById('closePopupBtn')?.addEventListener('click',()=>{ const pop = document.getElementById('maintenancePopup'); if(pop){ pop.classList.remove('active'); setTimeout(()=>{ pop.style.display='none'; },400); document.body.classList.remove('popup-active'); } }); })();
-    </script>
 </body>
 </html>
